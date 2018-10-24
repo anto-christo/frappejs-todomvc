@@ -1,5 +1,5 @@
 module.exports = {
-    name: "Event",
+    name: "ToDo",
     doctype: "DocType",
     isSingle: 0,
     fields: [

@@ -23,22 +23,22 @@ const frappe = require('frappejs');
 			});
 		},
 		deleteAll: async function(prevTodos) {
-			Promise.all(prevTodos.map((todo) => {
-				let newTodo = await frappe.getDoc('Event', todo.name);
+			Promise.all(prevTodos.map(async (todo) => {
+				let newTodo = await frappe.getDoc('ToDo', todo.name);
 				await newTodo.delete();
 			}));
 		},
 		updateAll: async function(newTodos) {
-			Promise.all(prevTodos.map((todo) => {
+			Promise.all(prevTodos.map(async (todo) => {
 				const newTodo = frappe.newDoc({
-					doctype: 'Event',
+					doctype: 'ToDo',
 					name: todo.name,
 					status: todo.status
 				});
 				await newTodo.insert();
 			}));
 		},
-		save: function (todos) {
+		save: async function (todos) {
 			let prevTodos = await this.fetch();
 			await this.deleteAll(prevTodos);
 			await this.updateAll(todos);
