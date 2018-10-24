@@ -1,9 +1,9 @@
 {
-  "name": "frappejs-boilerplate",
+  "name": "frappejs-todomvc",
   "version": "1.0.0",
-  "description": "A minimal boilerplate for quickly building apps with FrappeJS.",
+  "description": "A TodoMVC application in FrappeJS.",
   "main": "server/index.js",
-  "repository": "https://github.com/anto-christo/frappejs-boilerplate.git",
+  "repository": "https://github.com/anto-christo/frappejs-todomvc.git",
   "author": "anto-christo <anto.christo.20@gmail.com>",
   "license": "MIT",
   "dependencies": {
