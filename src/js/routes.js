@@ -1,4 +1,5 @@
 /*global app, Router */
+import Router from 'director/build/director.js';
 
 (function (app, Router) {
 
