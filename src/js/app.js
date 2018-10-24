@@ -11,12 +11,12 @@ import Vue from 'vue/dist/vue.js';
 		},
 		active: function (todos) {
 			return todos.filter(function (todo) {
-				return !todo.completed;
+				return todo.status == "incomplete";
 			});
 		},
 		completed: function (todos) {
 			return todos.filter(function (todo) {
-				return todo.completed;
+				return todo.status == "complete";
 			});
 		}
 	};
@@ -57,7 +57,10 @@ import Vue from 'vue/dist/vue.js';
 				},
 				set: function (value) {
 					this.todos.forEach(function (todo) {
-						todo.completed = value;
+						if(value)
+							todo.status = "complete";
+						else
+							todo.status = "incomplete";
 					});
 				}
 			}
@@ -76,7 +79,7 @@ import Vue from 'vue/dist/vue.js';
 				if (!value) {
 					return;
 				}
-				this.todos.push({ id: this.todos.length + 1, title: value, completed: false });
+				this.todos.push({ id: this.todos.length + 1, name: value, status: "incomplete" });
 				this.newTodo = '';
 			},
 
@@ -86,7 +89,7 @@ import Vue from 'vue/dist/vue.js';
 			},
 
 			editTodo: function (todo) {
-				this.beforeEditCache = todo.title;
+				this.beforeEditCache = todo.name;
 				this.editedTodo = todo;
 			},
 
@@ -95,18 +98,18 @@ import Vue from 'vue/dist/vue.js';
 					return;
 				}
 				this.editedTodo = null;
-				todo.title = todo.title.trim();
-				if (!todo.title) {
+				todo.name = todo.name.trim();
+				if (!todo.name) {
 					this.removeTodo(todo);
 				}
 			},
 
 			cancelEdit: function (todo) {
 				this.editedTodo = null;
-				todo.title = this.beforeEditCache;
+				todo.name = this.beforeEditCache;
 			},
 
-			removeCompleted: function () {
+			removestatus: function () {
 				this.todos = filters.active(this.todos);
 			}
 		},

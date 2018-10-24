@@ -4,26 +4,16 @@ module.exports = {
     isSingle: 0,
     fields: [
         {
-            fieldname: "date",
-            label: "Date",
-            fieldtype: "Date",
-            required: 1
-        },
-        {
-            fieldname: "venue",
-            label: "Venue",
+            fieldname: "name",
+            label: "ToDo Name",
             fieldtype: "Data",
             required: 1
         },
         {
-            fieldname: "title",
-            label: "Title",
-            fieldtype: "Data"
-        },
-        {
-            fieldname: "description",
-            label: "Description",
-            fieldtype: "Long Text",
+            fieldname: "status",
+            label: "Status",
+            fieldtype: "Data",
+            default: "incomplete",
             required: 1
         }
     ]
