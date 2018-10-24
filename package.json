@@ -7,6 +7,9 @@
   "author": "anto-christo <anto.christo.20@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "frappejs": "^0.0.9"
+    "frappejs": "^0.0.9",
+    "todomvc-common": "^1.0.1",
+    "todomvc-app-css": "^2.0.0",
+    "director": "^1.2.0"
   }
 }
