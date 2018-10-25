@@ -1,5 +1,5 @@
 module.exports = {
-    name: "Todos",
+    name: "ToDo",
     doctype: "DocType",
     naming: 'random',
     isSingle: 0,

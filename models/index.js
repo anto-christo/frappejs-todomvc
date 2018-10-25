@@ -1,5 +1,5 @@
 module.exports = {
     "models":{
-        "Todos": require('./doctype/Todos/Todos')
+        "ToDo": require('./doctype/ToDo/ToDo')
     }
 }

@@ -1,6 +1,7 @@
 /*global app, Router */
 
-(function (app) {
+import app from '../App.vue';
+(function () {
 
 	'use strict';
 

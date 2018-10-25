@@ -1,11 +1,11 @@
 module.exports = {
 	fetch: async function() {
-		return await frappe.db.getAll({ doctype:'Todos', fields:["*"] });
+		return await frappe.db.getAll({ doctype:'ToDo', fields:["*"] });
 	},
 
 	insert: async function(todo) {
 		const doc = frappe.newDoc({
-			doctype: 'Todos',
+			doctype: 'ToDo',
 			title: todo,
 			completed: false
 		});
@@ -13,26 +13,26 @@ module.exports = {
 	},
 
 	remove: async function(name) {
-		let todo = await frappe.getDoc('Todos', name);
+		let todo = await frappe.getDoc('ToDo', name);
 		await todo.delete();
 	},
 
 	removeCompleted: async function() {
 		let todos = await this.selectCompleted();
 		for(let todo of todos) {
-			let doc = await frappe.getDoc('Todos', todo.name);
+			let doc = await frappe.getDoc('ToDo', todo.name);
 			await doc.delete();
 		}
 	},
 
 	update: async function(name, value) {
-		let todo = await frappe.getDoc('Todos', name);
+		let todo = await frappe.getDoc('ToDo', name);
 		todo.title = value;
 		await todo.update();
 	},
 
 	updateStatus: async function(name) {
-		let todo = await frappe.getDoc('Todos', name);
+		let todo = await frappe.getDoc('ToDo', name);
 		todo.completed = 1 - todo.completed;
 		await todo.update();
 	},
@@ -47,18 +47,18 @@ module.exports = {
 		}
 		let allTodos = await this.fetch();
 		for(let todo of allTodos) {
-			let doc = await frappe.getDoc('Todos', todo.name);
+			let doc = await frappe.getDoc('ToDo', todo.name);
 			doc.completed = status;
 			await doc.update();
 		}
 	},
 
 	selectActive: async function() {
-		return await frappe.db.getAll({doctype:'ToDos', fields:['*'], filters: {completed: 0}});
+		return await frappe.db.getAll({doctype:'ToDo', fields:['*'], filters: {completed: 0}});
 	},
 
 	selectCompleted: async function() {
-		return await frappe.db.getAll({doctype:'ToDos', fields:['*'], filters: {completed: 1}});
+		return await frappe.db.getAll({doctype:'ToDo', fields:['*'], filters: {completed: 1}});
 	},
 
 	countRemaining: async function() {
