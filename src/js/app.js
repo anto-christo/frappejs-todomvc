@@ -38,12 +38,6 @@ frappe.docs = new Observable();
 			remaining: 0
 		},
 
-		computed: {
-			countRemaining: async function () {
-				this.remaining = await todoStorage.countRemaining();
-			},
-		},
-
 		async created() {
 			await this.getAllTodo();
 		},
@@ -66,14 +60,17 @@ frappe.docs = new Observable();
 
 			getAllTodo: async function () {
 				this.todos = await todoStorage.fetch();
+				await this.countRemaining();
 			},
 
 			toggleStatus: async function(name) {
 				await todoStorage.updateStatus(name);
+				await this.countRemaining();
 			},
 
 			toggleAllStatus: async function() {
 				this.isChecked = await todoStorage.checkAllStatus();
+				await this.getAllTodo();
 			},
 
 			deleteTodo: async function (name) {
@@ -111,6 +108,10 @@ frappe.docs = new Observable();
 			removeCompleted: async function () {
 				await todoStorage.removeCompleted();
 				await this.getAllTodo();
+			},
+
+			countRemaining: async function () {
+				this.remaining = await todoStorage.countRemaining();
 			}
 		},
 

@@ -1,22 +1,3 @@
-/*jshint unused:false */
-
-// (function (exports) {
-
-// 	'use strict';
-
-//  	var STORAGE_KEY = 'todos-vuejs';
-
-// 	exports.todoStorage = {
-// 		fetch: function () {
-// 			return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-// 		},
-// 		save: function (todos) {
-// 			localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-// 		}
-// 	};
-
-// })(window);
-
 module.exports = {
 	fetch: async function() {
 		return await frappe.db.getAll({ doctype:'Todos', fields:["*"] });
@@ -58,19 +39,12 @@ module.exports = {
 	},
 
 	checkAllStatus: async function() {
-		let allComplete = 1;
-		let status = 0;
-		let todos = await frappe.db.getAll({ doctype:'Todos', fields:["*"] });
-		for(let todo of todos) {
-			let doc = await frappe.getDoc('Todos', todo.name);
-			if(doc.completed == 0) {
-				allComplete = 0;
-			}
-		}
-		if(allComplete) {
-			status = 0;
-		} else {
+		let status;
+		let todos = await this.selectActive();
+		if(todos.length > 0) {
 			status = 1;
+		} else {
+			status = 0;
 		}
 		this.updateAllStatus(todos, status);
 		return status;
