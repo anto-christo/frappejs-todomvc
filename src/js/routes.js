@@ -21,4 +21,4 @@
 
 	router.init();
 
-})(app, Router);
+})(app);

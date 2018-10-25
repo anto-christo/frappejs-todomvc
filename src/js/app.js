@@ -1,25 +1,27 @@
 /*global Vue, todoStorage */
 import Vue from 'vue/dist/vue.js';
+import todoStorage from './store.js';
+
+const frappe = require('frappejs');
+const common = require('frappejs/common')
+const models = require('../../models');
+const coreModels = require('frappejs/models');
+const HTTPClient = require('frappejs/backends/http');
+const Observable = require('frappejs/utils/observable');
+
+const server = 'localhost:8000';
+window.frappe = frappe;
+frappe.init();
+frappe.registerLibs(common);
+frappe.registerModels(coreModels);
+frappe.registerModels(models);
+frappe.fetch = window.fetch.bind();
+frappe.db = new HTTPClient({ server });
+frappe.docs = new Observable();
 
 (function (exports) {
 
 	'use strict';
-
-	var filters = {
-		all: function (todos) {
-			return todos;
-		},
-		active: function (todos) {
-			return todos.filter(function (todo) {
-				return !todo.completed;
-			});
-		},
-		completed: function (todos) {
-			return todos.filter(function (todo) {
-				return todo.completed;
-			});
-		}
-	};
 
 	exports.app = new Vue({
 
@@ -28,92 +30,90 @@ import Vue from 'vue/dist/vue.js';
 
 		// app initial state
 		data: {
-			todos: todoStorage.fetch(),
+			todos: [],
 			newTodo: '',
+			isChecked: 0,
 			editedTodo: null,
-			visibility: 'all'
+			visibility: 'all',
+			remaining: 0
 		},
 
-		// watch todos change for localStorage persistence
-		watch: {
-			todos: {
-				deep: true,
-				handler: todoStorage.save
-			}
-		},
-
-		// computed properties
-		// http://vuejs.org/guide/computed.html
 		computed: {
-			filteredTodos: function () {
-				return filters[this.visibility](this.todos);
+			countRemaining: async function () {
+				this.remaining = await todoStorage.countRemaining();
 			},
-			remaining: function () {
-				return filters.active(this.todos).length;
-			},
-			allDone: {
-				get: function () {
-					return this.remaining === 0;
-				},
-				set: function (value) {
-					this.todos.forEach(function (todo) {
-						todo.completed = value;
-					});
-				}
-			}
 		},
 
-		// methods that implement data logic.
-		// note there's no DOM manipulation here at all.
+		async created() {
+			await this.getAllTodo();
+		},
+
 		methods: {
 
 			pluralize: function (word, count) {
 				return word + (count === 1 ? '' : 's');
 			},
 
-			addTodo: function () {
+			addTodo: async function () {
 				var value = this.newTodo && this.newTodo.trim();
 				if (!value) {
 					return;
 				}
-				this.todos.push({ id: this.todos.length + 1, title: value, completed: false });
+				await todoStorage.insert(value);
 				this.newTodo = '';
+				await this.getAllTodo();
 			},
 
-			removeTodo: function (todo) {
-				var index = this.todos.indexOf(todo);
-				this.todos.splice(index, 1);
+			getAllTodo: async function () {
+				this.todos = await todoStorage.fetch();
+			},
+
+			toggleStatus: async function(name) {
+				await todoStorage.updateStatus(name);
+			},
+
+			toggleAllStatus: async function() {
+				this.isChecked = await todoStorage.checkAllStatus();
+			},
+
+			deleteTodo: async function (name) {
+				await todoStorage.remove(name);
+				await this.getAllTodo();
 			},
 
 			editTodo: function (todo) {
-				this.beforeEditCache = todo.title;
+				this.beforeEdit = todo.name;
 				this.editedTodo = todo;
 			},
 
-			doneEdit: function (todo) {
+			updateTodo: async function (name, value) {
 				if (!this.editedTodo) {
 					return;
 				}
 				this.editedTodo = null;
-				todo.title = todo.title.trim();
-				if (!todo.title) {
-					this.removeTodo(todo);
+				value = value.trim();
+				if (!value) {
+					await this.deleteTodo(name);
+				} else {
+					await todoStorage.update(name, value);
 				}
+				await this.getAllTodo();
 			},
 
-			cancelEdit: function (todo) {
-				this.editedTodo = null;
-				todo.title = this.beforeEditCache;
+			selectActive: async function() {
+				this.todos = await todoStorage.selectActive();
 			},
 
-			removeCompleted: function () {
-				this.todos = filters.active(this.todos);
+			selectCompleted: async function() {
+				this.todos = await todoStorage.selectCompleted();
+			},
+
+			removeCompleted: async function () {
+				await todoStorage.removeCompleted();
+				await this.getAllTodo();
 			}
 		},
 
-		// a custom directive to wait for the DOM to be updated
-		// before focusing on the input field.
-		// http://vuejs.org/guide/custom-directive.html
 		directives: {
 			'todo-focus': function (el, binding) {
 				if (binding.value) {
