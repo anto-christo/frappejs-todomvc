@@ -19,7 +19,7 @@
                 </li>
             </ul>
         </section>
-        <footer class="footer">
+        <footer class="footer" v-show="totalTodo">
             <span class="todo-count">
                 <strong v-text="remaining"></strong> {{pluralize('item', remaining)}} left
             </span>
@@ -46,9 +46,9 @@ export default {
 
     data: function() {
         return {
-            todos: [],
+			todos: [],
+			totalTodo: 0,
             newTodo: '',
-            isChecked: 0,
             editedTodo: null,
             visibility: 'all',
             remaining: 0
@@ -66,6 +66,7 @@ export default {
 		},
 
 		addTodo: async function () {
+			this.visibility = 'all';
 			var value = this.newTodo && this.newTodo.trim();
 			if (!value) {
 				return;
@@ -77,6 +78,7 @@ export default {
 
 		getAllTodo: async function () {
 			this.todos = await todoStorage.fetch();
+			this.totalTodo = this.todos.length;
 			await this.countRemaining();
 		},
 
@@ -86,7 +88,8 @@ export default {
 		},
 
 		toggleAllStatus: async function() {
-			await todoStorage.updateAllStatus();
+			let status = await todoStorage.checkAllStatus();
+			await todoStorage.updateAllStatus(status);
 			await this.getAllTodo();
 		},
 

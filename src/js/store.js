@@ -37,7 +37,7 @@ module.exports = {
 		await todo.update();
 	},
 
-	updateAllStatus: async function() {
+	checkAllStatus: async function() {
 		let status;
 		let todos = await this.selectActive();
 		if(todos.length > 0) {
@@ -45,6 +45,10 @@ module.exports = {
 		} else {
 			status = 0;
 		}
+		return status;
+	},
+
+	updateAllStatus: async function(status) {
 		let allTodos = await this.fetch();
 		for(let todo of allTodos) {
 			let doc = await frappe.getDoc('ToDo', todo.name);
