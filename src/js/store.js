@@ -19,7 +19,6 @@ module.exports = {
 
 	removeCompleted: async function() {
 		let todos = await this.selectCompleted();
-		console.log(todos);
 		for(let todo of todos) {
 			let doc = await frappe.getDoc('Todos', todo.name);
 			await doc.delete();
@@ -38,7 +37,7 @@ module.exports = {
 		await todo.update();
 	},
 
-	checkAllStatus: async function() {
+	updateAllStatus: async function() {
 		let status;
 		let todos = await this.selectActive();
 		if(todos.length > 0) {
@@ -46,12 +45,8 @@ module.exports = {
 		} else {
 			status = 0;
 		}
-		this.updateAllStatus(todos, status);
-		return status;
-	},
-
-	updateAllStatus: async function(todos, status) {
-		for(let todo of todos) {
+		let allTodos = await this.fetch();
+		for(let todo of allTodos) {
 			let doc = await frappe.getDoc('Todos', todo.name);
 			doc.completed = status;
 			await doc.update();
@@ -68,7 +63,6 @@ module.exports = {
 
 	countRemaining: async function() {
 		let todos = await this.selectActive();
-		console.log(todos.length);
 		return todos.length;
 	}
 }

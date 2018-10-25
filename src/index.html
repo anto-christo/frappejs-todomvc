@@ -17,7 +17,7 @@
 				<ul class="todo-list">
 					<li class="todo" v-for="todo in todos" :key="todo.name" :class="{completed: todo.completed, editing: todo == editedTodo}">
 						<div class="view">
-							<input class="toggle" type="checkbox" v-model="todo.completed" v-on:change="toggleStatus(todo.name)" :checked="isChecked">
+							<input class="toggle" type="checkbox" v-model="todo.completed" v-on:change="toggleStatus(todo.name)">
 							<label @dblclick="editTodo(todo)">{{todo.title}}</label>
 							<button class="destroy" @click="deleteTodo(todo.name)"></button>
 						</div>

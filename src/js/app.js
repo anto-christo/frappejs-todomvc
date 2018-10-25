@@ -69,7 +69,7 @@ frappe.docs = new Observable();
 			},
 
 			toggleAllStatus: async function() {
-				this.isChecked = await todoStorage.checkAllStatus();
+				await todoStorage.updateAllStatus();
 				await this.getAllTodo();
 			},
 
