@@ -1,2 +1,6 @@
-# frappejs-boilerplate
-A minimal boilerplate for quickly building apps with FrappeJS.
+# frappejs-todomvc
+
+A standard Todo MVC app built using FrappeJS.
+
+Todo MVC - http://todomvc.com  
+FrappeJS - https://frappe.io/frappejs
