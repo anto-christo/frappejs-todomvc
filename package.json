@@ -1,11 +1,6 @@
 {
   "name": "frappejs-todomvc",
   "version": "1.0.0",
-  "description": "A TodoMVC application in FrappeJS.",
-  "main": "server/index.js",
-  "repository": "https://github.com/anto-christo/frappejs-todomvc.git",
-  "author": "anto-christo <anto.christo.20@gmail.com>",
-  "license": "MIT",
   "dependencies": {
     "frappejs": "^0.0.9",
     "todomvc-common": "^1.0.1",
