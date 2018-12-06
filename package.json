@@ -5,14 +5,11 @@
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
-        "aws-sdk": "^2.363.0",
         "frappejs": "^0.0.9",
-        "popper.js": "^1.14.5",
         "todomvc-common": "^1.0.1",
         "todomvc-app-css": "^2.0.0"
     },
     "devDependencies": {
-        "electron": "^3.0.10",
         "electron-builder": "^20.28.4"
     }
 }
